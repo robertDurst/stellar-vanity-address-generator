@@ -2,12 +2,11 @@
 name = "stellar vanity"
 version = "0.1.0"
 authors = ["Rob Durst <rsdurst@colby.edu>"]
-build = "main.rs"
 description = "A simple CLI for generating Stellar vanity addresses"
 readme = "README.md"
 keywords = ["stellar", "vanity", "address"]
 categories = ["blockchain", "cli", "tool"]
-
+repository = "https://github.com/robertDurst/stellar-vanity-address-generator"
 
 [dependencies]
 rand = "0.4"
