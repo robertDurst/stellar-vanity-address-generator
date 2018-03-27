@@ -7,6 +7,7 @@ readme = "README.md"
 keywords = ["stellar", "vanity", "address"]
 categories = ["blockchain", "cli", "tool"]
 repository = "https://github.com/robertDurst/stellar-vanity-address-generator"
+license-file = "LICENSE"
 
 [dependencies]
 rand = "0.4"
