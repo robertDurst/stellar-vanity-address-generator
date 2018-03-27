@@ -1,7 +1,13 @@
 [package]
-name = "stellar_vanity"
+name = "stellar vanity"
 version = "0.1.0"
-authors = ["rustee"]
+authors = ["Rob Durst <rsdurst@colby.edu>"]
+build = "main.rs"
+description = "A simple CLI for generating Stellar vanity addresses"
+readme = "README.md"
+keywords = ["stellar", "vanity", "address"]
+categories = ["blockchain", "cli", "tool"]
+
 
 [dependencies]
 rand = "0.4"
@@ -11,3 +17,4 @@ base32 = "0.3.1"
 crc16 = "0.3.4"
 bytes = "0.4.6"
 byteorder = "1.2.1"
+clap = "2.26.0"

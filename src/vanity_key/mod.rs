@@ -5,7 +5,7 @@ use base32::encode;
 use base32::Alphabet::RFC4648;
 use crc16::*;
 use byteorder::LittleEndian;
-use bytes::{BytesMut, BufMut, };
+use bytes::{BufMut, BytesMut};
 
 fn generate_random_key() -> (String, String) {
     // Generate cryptographically secure pseudorandom number
@@ -25,7 +25,7 @@ fn generate_random_key() -> (String, String) {
     bytes_buffer_public.put(&bytes_public);
     bytes_buffer_public.put_u16::<LittleEndian>(checksum_public);
     // Base 32 encode the public key
-    let public_key = encode(RFC4648{padding: false}, &bytes_buffer_public);
+    let public_key = encode(RFC4648 { padding: false }, &bytes_buffer_public);
 
     // ************** Encode the private key ***************** //
     const VERSION_BYTE_SEED: u8 = 18 << 3;
@@ -39,13 +39,33 @@ fn generate_random_key() -> (String, String) {
     bytes_buffer_private.put(&bytes_private);
     bytes_buffer_private.put_u16::<LittleEndian>(check_sum_private);
     // Base 32 encode the private key
-    let private_key = encode(RFC4648{padding: false}, &bytes_buffer_private);
+    let private_key = encode(RFC4648 { padding: false }, &bytes_buffer_private);
 
     (public_key, private_key)
 }
 
+/// Stellar vanity wallet generator.
+///
+/// <h1> Example </h1>
+///
+/// <h3> Sample Code: </h3>
+///
+/// ````
+/// use vanity_key::generate_vanity_key;
+///
+/// generate_vanity_key("A");
+/// ````
+///
+/// <h3> Possible Output: </h3>
+/// ````
+/// SEARCHING INITIATED
+///
+/// SUCCESS!
+/// Public Key: "GANKWRSNEREXR3TOVBCJDZG5V4JN3JICK7VP7NUGTCKRX2PDMOKC5REA"
+/// Secret Key: "SBTYFPJ6MZ4BXXXWP5N6RYPNZPLWKI4EJNPGJRBLHOIISZKPM5AOEGQT"
+/// ````
 pub fn generate_vanity_key(word: &str) -> (String, String) {
-    let start = 56-word.len();
+    let start = 56 - word.len();
     loop {
         let (public_key, private_key) = generate_random_key();
         let three_letter = &public_key[start..];
