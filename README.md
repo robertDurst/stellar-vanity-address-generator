@@ -25,7 +25,7 @@ cargo run <PREFIX>
 ```
 
 ## Roadmap
-[ ] Better docs
-[ ] Parallelize
-[ ] Remove dependencies
-[ ] Ability to prefix
+[] Better docs
+[] Parallelize
+[] Remove dependencies
+[] Ability to prefix
