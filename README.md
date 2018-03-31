@@ -26,6 +26,6 @@ cargo run <PREFIX>
 
 ## Roadmap
 - [ ] Better docs
-- [ ] Parallelize
+- [ ] Make Faster
 - [ ] Remove dependencies
 - [ ] Ability to prefix
