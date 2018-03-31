@@ -1,4 +1,4 @@
-use rand::OsRng;
+use rand::{Rng, OsRng};
 use sha2::Sha512;
 use ed25519_dalek::Keypair;
 use base32::encode;
@@ -7,11 +7,9 @@ use crc16::*;
 use byteorder::LittleEndian;
 use bytes::{BufMut, BytesMut};
 
-fn generate_random_key() -> (String, String) {
-    // Generate cryptographically secure pseudorandom number
-    let mut cspring: OsRng = OsRng::new().unwrap();
+fn generate_random_key(rng: &mut Rng) -> (String, String) {
     // Generate ED25519 key pair
-    let keypair: Keypair = Keypair::generate::<Sha512>(&mut cspring);
+    let keypair: Keypair = Keypair::generate::<Sha512>(rng);
 
     // ************** Encode the public key ***************** //
     const VERSION_BYTE_ACCOUNT_ID: u8 = 6 << 3;
@@ -66,8 +64,10 @@ fn generate_random_key() -> (String, String) {
 /// ````
 pub fn generate_vanity_key(word: &str) -> (String, String) {
     let start = 56 - word.len();
+    // Create cryptographically secure pseudorandom number generator
+    let mut rng: OsRng = OsRng::new().unwrap();
     loop {
-        let (public_key, private_key) = generate_random_key();
+        let (public_key, private_key) = generate_random_key(&mut rng);
         let three_letter = &public_key[start..];
         if three_letter == word {
             return (public_key.clone(), private_key.clone());
