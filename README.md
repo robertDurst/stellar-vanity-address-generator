@@ -21,7 +21,7 @@ a tuble (public_key, private_key) will be returned. Note, this is a synchronous 
 
 ## How to use CLI:
 ```
-cargo run <PREFIX>
+cargo run <POSTFIX>
 ```
 
 ## Roadmap
