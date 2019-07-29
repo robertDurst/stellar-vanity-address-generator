@@ -19,8 +19,10 @@ fn main() {
     let postfix = matches.value_of("POSTFIX").unwrap();
 
     println!("\nSEARCHING INITIATED");
+
     let (public_key, private_key) =
         stellar_vanity::vanity_key::generate_vanity_key(&postfix.to_uppercase());
+
     println!(
         "\nSUCCESS!\nPublic Key: {:?}\nSecret Key: {:?}",
         public_key, private_key

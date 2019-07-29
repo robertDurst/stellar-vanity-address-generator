@@ -1,5 +1,5 @@
-use rand::{Rng, OsRng};
-use sha2::Sha512;
+use rand::{Rng, CryptoRng};
+use rand::rngs::OsRng;
 use ed25519_dalek::Keypair;
 use base32::encode;
 use base32::Alphabet::RFC4648;
@@ -7,9 +7,11 @@ use crc16::*;
 use byteorder::LittleEndian;
 use bytes::{BufMut, BytesMut};
 
-fn generate_random_key(rng: &mut Rng) -> (String, String) {
+fn generate_random_key<A>(rng: &mut A) -> (String, String)
+    where A: Rng + CryptoRng
+{
     // Generate ED25519 key pair
-    let keypair: Keypair = Keypair::generate::<Sha512>(rng);
+    let keypair: Keypair = Keypair::generate(rng);
 
     // ************** Encode the public key ***************** //
     const VERSION_BYTE_ACCOUNT_ID: u8 = 6 << 3;
@@ -64,8 +66,10 @@ fn generate_random_key(rng: &mut Rng) -> (String, String) {
 /// ````
 pub fn generate_vanity_key(word: &str) -> (String, String) {
     let start = 56 - word.len();
+
     // Create cryptographically secure pseudorandom number generator
-    let mut rng: OsRng = OsRng::new().unwrap();
+    let mut rng = OsRng::new().unwrap();
+
     loop {
         let (public_key, private_key) = generate_random_key(&mut rng);
         let three_letter = &public_key[start..];
