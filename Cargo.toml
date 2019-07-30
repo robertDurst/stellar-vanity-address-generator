@@ -1,6 +1,6 @@
 [package]
 name = "stellar_vanity"
-version = "0.3.0"
+version = "0.4.0"
 authors = ["Rob Durst <rsdurst@colby.edu>"]
 description = "A simple CLI for generating Stellar vanity addresses"
 readme = "README.md"

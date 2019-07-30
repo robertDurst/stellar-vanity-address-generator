@@ -5,8 +5,8 @@ use clap::{App, Arg};
 
 fn main() {
     let matches = App::new("Stellar Vanity Address Generator")
-        .version("0.1.0")
-        .author("Rob Durst <rsdurst@colby.edu>")
+        .version("0.4.0")
+        .author("Rob Durst")
         .about("A simple CLI for generating Stellar Vanity Addresses.")
         .arg(
             Arg::with_name("POSTFIX")
