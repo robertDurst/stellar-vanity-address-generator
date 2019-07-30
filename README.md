@@ -16,16 +16,10 @@ generate_vanity_key("A"); // Where A is the desired postfix.
 ```
 
 This will continuously loop until a key with the desired postfix is found. Once the vanity address is found,
-a tuble (public_key, private_key) will be returned. Note, this is a synchronous function.
+a tuple (public_key, private_key) will be returned. Note, this is a synchronous function.
 
 
 ## How to use CLI:
 ```
 cargo run <POSTFIX>
 ```
-
-## Roadmap
-- [ ] Better docs
-- [ ] Make Faster
-- [ ] Remove dependencies
-- [ ] Ability to prefix
