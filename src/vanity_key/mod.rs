@@ -6,6 +6,21 @@ use ed25519_dalek::Keypair;
 use rand::rngs::OsRng;
 use rand::{CryptoRng, Rng};
 
+/// Stellar vanity address generator.
+///
+/// <h1> Example </h1>
+///
+/// <h3> Sample Code: </h3>
+///
+/// ````
+/// use stellar_vanity::vanity_key::generate_vanity_key;
+///
+/// let mut generator: AddressGenerator = Default::default();
+/// let (public_key, private_key) = generator.find(|public, private| {
+///     // any conditions go here
+///     public.as_str().ends_with("RUST") // e.g. find address with the "RUST" suffix
+/// });
+/// ````
 pub struct AddressGenerator<T = OsRng>
 where
     T: Rng + CryptoRng,
