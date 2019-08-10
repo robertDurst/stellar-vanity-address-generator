@@ -10,16 +10,23 @@ different length words in a vanity address (based on a more optimized algorthim/
 
 ## How to use library:
 ```
-use vanity_key::generate_vanity_key;
+use stellar_vanity::vanity_key::AddressGenerator;
 
-generate_vanity_key("A"); // Where A is the desired postfix.
+let mut generator: AddressGenerator = Default::default();
+
+let (public_key, private_key) = generator.find(|public, private| {
+  // any conditions go here
+  public.as_str().ends_with("RUST") // e.g. find address with the "RUST" suffix
+});
 ```
 
-This will continuously loop until a key with the desired postfix is found. Once the vanity address is found,
+This will continuously loop until a key with the desired properties is found. Once the vanity address is found,
 a tuple (public_key, private_key) will be returned. Note, this is a synchronous function.
 
 
 ## How to use CLI:
 ```
-cargo run <POSTFIX>
+cargo run [--postfix=<POSTFIX>] [--prefix=<PREFIX>]
+
+Either `--postfix` or `--prefix` option is required.
 ```
