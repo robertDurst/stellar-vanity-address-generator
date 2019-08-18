@@ -26,7 +26,7 @@ a tuple (public_key, private_key) will be returned. Note, this is a synchronous 
 
 ## How to use CLI:
 ```
-cargo run [--postfix=<POSTFIX>] [--prefix=<PREFIX>]
+cargo run -- [--postfix=<POSTFIX>] [--prefix=<PREFIX>]
 
 Either `--postfix` or `--prefix` option is required.
 ```
