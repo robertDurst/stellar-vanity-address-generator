@@ -36,13 +36,6 @@ where
     pub fn new(rng: T) -> AddressGenerator<T> {
         AddressGenerator { rng }
     }
-
-    fn generate_random_keypair(&mut self) -> Keypair {
-        // Generate ED25519 key pair
-        let keypair: Keypair = Keypair::generate(&mut self.rng);
-
-        keypair
-    }
 }
 
 impl Default for AddressGenerator<OsRng> {
@@ -60,26 +53,26 @@ where
     type Item = Keypair;
 
     fn next(&mut self) -> Option<Self::Item> {
-        Some(self.generate_random_keypair())
+        Some(Keypair::generate(&mut self.rng))
     }
 }
 
 pub fn deserialize_public_key(keypair: &Keypair) -> String {
-       // ************** Encode the public key ***************** //
-        const VERSION_BYTE_ACCOUNT_ID: u8 = 6 << 3;
-        let mut bytes_public = vec![VERSION_BYTE_ACCOUNT_ID];
-        // Combine the byte version and the ED25519 raw public key bytes array
-        &bytes_public.extend_from_slice(&keypair.public.to_bytes());
-        // Calculate checksum
-        let checksum_public = State::<XMODEM>::calculate(&bytes_public);
-        // Create a buffer to combine byte version : ED25519 raw key : checksum
-        let mut bytes_buffer_public = BytesMut::with_capacity(1024);
-        bytes_buffer_public.put(&bytes_public);
-        bytes_buffer_public.put_u16_le(checksum_public);
-        // Base 32 encode the public key
-        let public_key = encode(RFC4648 { padding: false }, &bytes_buffer_public);
+    // ************** Encode the public key ***************** //
+    const VERSION_BYTE_ACCOUNT_ID: u8 = 6 << 3;
+    let mut bytes_public = vec![VERSION_BYTE_ACCOUNT_ID];
+    // Combine the byte version and the ED25519 raw public key bytes array
+    &bytes_public.extend_from_slice(&keypair.public.to_bytes());
+    // Calculate checksum
+    let checksum_public = State::<XMODEM>::calculate(&bytes_public);
+    // Create a buffer to combine byte version : ED25519 raw key : checksum
+    let mut bytes_buffer_public = BytesMut::with_capacity(1024);
+    bytes_buffer_public.put(&bytes_public);
+    bytes_buffer_public.put_u16_le(checksum_public);
+    // Base 32 encode the public key
+    let public_key = encode(RFC4648 { padding: false }, &bytes_buffer_public);
 
-        public_key
+    public_key
 }
 
 pub fn deserialize_private_key(keypair: &Keypair) -> String {
