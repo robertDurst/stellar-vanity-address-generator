@@ -3,6 +3,7 @@ extern crate stellar_vanity;
 
 use std::sync::{mpsc, Arc};
 use std::thread;
+use std::time::Instant;
 
 use clap::{App, Arg};
 use stellar_vanity::vanity_key::{
@@ -41,7 +42,13 @@ fn main() {
 
     let (tx, rx) = mpsc::channel();
 
-    println!("\nSEARCHING INITIATED");
+    if threads_count == 1 {
+        println!("\nSEARCHING INITIATED");
+    } else {
+        println!("\nSEARCHING INITIATED USING {} THREADS", threads_count);
+    }
+
+    let start = Instant::now();
 
     for _i in 1..threads_count {
         let thread_tx = tx.clone();
@@ -75,11 +82,13 @@ fn main() {
 
     let keypair = rx.recv().unwrap();
 
+    let duration = start.elapsed();
+
     let public_key = deserialize_public_key(&keypair);
     let private_key = deserialize_private_key(&keypair);
 
     println!(
-        "\nSUCCESS!\nPublic Key: {:?}\nSecret Key: {:?}",
-        public_key, private_key
+        "\nSUCCESS!\nPublic Key: {:?}\nSecret Key: {:?}\n\nFound in {:?}",
+        public_key, private_key, duration
     );
 }
