@@ -26,7 +26,12 @@ a tuple (public_key, private_key) will be returned. Note, this is a synchronous 
 
 ## How to use CLI:
 ```
-cargo run -- [--postfix=<POSTFIX>] [--prefix=<PREFIX>]
+cargo run -- [--postfix=<POSTFIX>] [--prefix=<PREFIX>] [-c=<NUMBER_OF_THREADS>]
 
-Either `--postfix` or `--prefix` option is required.
+Either `--postfix` or `--prefix` option is required, while thread count is optional.
+```
+
+As an example, the following looks for an address ending in pizza with 8 threads:
+```
+cargo run -- -c=8 --postfix=pizza
 ```
