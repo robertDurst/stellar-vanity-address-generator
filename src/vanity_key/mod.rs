@@ -40,7 +40,7 @@ where
 
 impl Default for AddressGenerator<OsRng> {
     fn default() -> Self {
-        let rng = OsRng::new().unwrap();
+        let rng = OsRng;
 
         AddressGenerator { rng }
     }
