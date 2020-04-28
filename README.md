@@ -1,4 +1,7 @@
 # Stellar Vanity
+
+![](https://img.shields.io/crates/d/stellar_vanity)
+
 A simple CLI tool to generate Stellar vanity addresses.
 
 **Vanity Address:** similar to a vanity license plate, a vanity cryptocurrency address is an
