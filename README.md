@@ -21,6 +21,21 @@ To see how things actually perform, [not just in theory based on a random chart 
 | 3           | ~1.0 s        |
 | 4           | ~26.5 s       |
 
+## How can I Benchmark?
+
+Ah, thanks so much! I have limited computing power.
+
+1. `git clone https://github.com/robertDurst/stellar-vanity-address-generator.git`
+2. `cd stellar-vanity-address-generator`
+3. `cargo bench`
+
+**Benchmark Configurations:**
+* as many threads as possible (see note below)
+* 25 samples per method
+* 1 - 6 prefixes
+
+**Note:** this uses `num_cpus::get()` from [num_cpus](https://docs.rs/num_cpus/1.13.0/num_cpus/) to determine the maximum number of cores availible. If that is not desired, you'll have to dig in and set this number manually... or open a pr if you know how to pass CLI args to `cargo bench` :) 
+
 ## How to use library:
 ```
 use stellar_vanity::vanity_key::AddressGenerator, deserialize_public_key};;

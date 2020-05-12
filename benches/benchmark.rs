@@ -1,12 +1,12 @@
 extern crate criterion;
 extern crate stellar_vanity;
+extern crate num_cpus;
 
 use std::sync::{mpsc, Arc};
 use std::thread;
 use criterion::{black_box, criterion_group, criterion_main, Criterion, Benchmark};
 use stellar_vanity::vanity_key::{deserialize_public_key, AddressGenerator};
 
-const NUM_THREADS: i64 = 32;
 const NUM_SAMPLES: usize = 25;
 
 fn test_generator_postfix_multicore(pattern: &str, threads_count: i64) {
@@ -41,12 +41,17 @@ fn test_generator_postfix_multicore(pattern: &str, threads_count: i64) {
 }
 
 fn criterion_benchmark(c: &mut Criterion) {
+    // use as many threads as possible
+    let num_threads: i64 = num_cpus::get() as i64;
+
     c.bench(
         "prefix",
-        Benchmark::new("one", |b| b.iter(|| test_generator_postfix_multicore(black_box("a"), black_box(NUM_THREADS))))
-        .with_function("two", |b| b.iter(|| test_generator_postfix_multicore(black_box("ab"), black_box(NUM_THREADS))))
-        .with_function("three", |b| b.iter(|| test_generator_postfix_multicore(black_box("abc"), black_box(NUM_THREADS))))
-        .with_function("four", |b| b.iter(|| test_generator_postfix_multicore(black_box("abcd"), black_box(NUM_THREADS))))
+        Benchmark::new("one", move |b| b.iter(|| test_generator_postfix_multicore(black_box("a"), black_box(num_threads))))
+        .with_function("two", move |b| b.iter(|| test_generator_postfix_multicore(black_box("ab"), black_box(num_threads))))
+        .with_function("three", move |b| b.iter(|| test_generator_postfix_multicore(black_box("abc"), black_box(num_threads))))
+        .with_function("four", move |b| b.iter(|| test_generator_postfix_multicore(black_box("abcd"), black_box(num_threads))))
+        .with_function("five", move |b| b.iter(|| test_generator_postfix_multicore(black_box("abcde"), black_box(num_threads))))
+        .with_function("six", move |b| b.iter(|| test_generator_postfix_multicore(black_box("abcdef"), black_box(num_threads))))
         .sample_size(NUM_SAMPLES)
     );
 }
