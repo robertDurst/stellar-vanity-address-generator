@@ -6,25 +6,34 @@ A simple CLI tool to generate Stellar vanity addresses.
 
 **Vanity Address:** similar to a vanity license plate, a vanity cryptocurrency address is an
 address where either the beginning (prefix) or end (postfix) is a special or meaningful phrase.
-Generating such an address requires work. Below is the expected time and difficulty of finding
-different length words in a vanity address (based on a more optimized algorthim/codebase).
+Generating such an address requires work. 
 
-![Vanity Key Chrt](https://imgur.com/diotZ02.png)
+## Benchmarking
+
+Benchmarking is performed by using [criterion.rs](https://github.com/bheisler/criterion.rs) via `cargo bench`, which executes the `benches/benchmark.rs` file.
+
+To see how things actually perform, [not just in theory based on a random chart from the internet](https://github.com/robertDurst/stellar-vanity-address-generator/issues/13), I benchmarked on a CPU-intensive Ubuntu 18.04 box with 32 vCPUs, 64GB RAM, and 400GB Disk. Below are my results with a `32` thread and `10` sample configuration executed against rust `1.43.0` on May 12, 2020. Using only `10` samples is a weakness in this benchmarking example - will need to increase for a more accurate testing in the future.
+
+| prefix size | measured time |
+|-------------|---------------|
+| 1           | ~3.6 ms       |
+| 2           | ~47.4 ms      |
+| 3           | ~1.0 s        |
+| 4           | ~26.5 s       |
 
 ## How to use library:
 ```
-use stellar_vanity::vanity_key::AddressGenerator;
+use stellar_vanity::vanity_key::AddressGenerator, deserialize_public_key};;
 
 let mut generator: AddressGenerator = Default::default();
-
-let (public_key, private_key) = generator.find(|public, private| {
-  // any conditions go here
-  public.as_str().ends_with("RUST") // e.g. find address with the "RUST" suffix
+let keypair = generator.find(|key| {
+    let public = deserialize_public_key(key);
+    // any conditions go here
+    public.as_str().ends_with("RUST") // e.g. find address with the "RUST" suffix
 });
 ```
 
-This will continuously loop until a key with the desired properties is found. Once the vanity address is found,
-a tuple (public_key, private_key) will be returned. Note, this is a synchronous function.
+This will continuously loop until a key with the desired properties is found. Once the vanity address is found, a keypair will be returned, which may be deserialized with `deserialize_public_key` and `deserialize_private_key` respectively. Note, this is a synchronous function.
 
 
 ## How to use CLI:
