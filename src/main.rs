@@ -50,7 +50,7 @@ fn main() {
 
     let start = Instant::now();
 
-    for _i in 1..threads_count {
+    for _i in 0..threads_count {
         let thread_tx = tx.clone();
         let postfix_option = Arc::clone(&postfix_option);
         let prefix_option = Arc::clone(&prefix_option);
