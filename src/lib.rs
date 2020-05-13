@@ -22,5 +22,6 @@ extern crate bytes;
 extern crate crc16;
 extern crate ed25519_dalek;
 extern crate rand;
+extern crate rand_core;
 
 pub mod vanity_key;

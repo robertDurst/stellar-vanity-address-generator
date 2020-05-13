@@ -1,10 +1,12 @@
+#![allow(dead_code)]
 use base32::encode;
 use base32::Alphabet::RFC4648;
 use bytes::{BufMut, BytesMut};
 use crc16::*;
 use ed25519_dalek::Keypair;
 use rand::rngs::OsRng;
-use rand::{CryptoRng, Rng};
+use rand::{Rng};
+use rand_core::{impls, RngCore, Error, CryptoRng};
 
 /// Stellar vanity address generator.
 ///
@@ -22,7 +24,37 @@ use rand::{CryptoRng, Rng};
 ///     public.as_str().ends_with("RUST") // e.g. find address with the "RUST" suffix
 /// });
 /// ````
-pub struct AddressGenerator<T = OsRng>
+
+// we don't need real random numbers, just a random seed to start with and then
+// increment since this seed is hashed anyway
+// https://github.com/robertDurst/stellar-vanity-address-generator/issues/15
+// the following non-random, random generator is very heavilly influenced by
+// https://docs.rs/rand/0.6.5/rand/trait.RngCore.html#example
+pub struct NotRNG(u64);
+
+impl RngCore for NotRNG {
+    fn next_u32(&mut self) -> u32 {
+        self.next_u64() as u32
+    }
+     
+    fn next_u64(&mut self) -> u64 {
+        self.0 += 1;
+        self.0
+    }
+     
+    fn fill_bytes(&mut self, dest: &mut [u8]) {
+        impls::fill_bytes_via_next(self, dest)
+    }
+     
+    fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), Error> {
+        Ok(self.fill_bytes(dest))
+    }
+}
+
+// turns out this is a marker trait ¯\_(ツ)_/¯
+impl CryptoRng for NotRNG {}
+
+pub struct AddressGenerator<T = NotRNG>
 where
     T: Rng + CryptoRng,
 {
@@ -38,9 +70,10 @@ where
     }
 }
 
-impl Default for AddressGenerator<OsRng> {
+impl Default for AddressGenerator<NotRNG> {
     fn default() -> Self {
-        let rng = OsRng;
+        // even though NotRNG is predictable, here we randomize the start seed
+        let rng = NotRNG(rand::thread_rng().gen());
 
         AddressGenerator { rng }
     }
