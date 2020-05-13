@@ -7,7 +7,8 @@ use std::time::Instant;
 
 use clap::{App, Arg};
 use stellar_vanity::vanity_key::{
-    deserialize_private_key, deserialize_public_key, AddressGenerator, optimized_prefix_deserialize_public_key
+    deserialize_private_key, deserialize_public_key, optimized_prefix_deserialize_public_key,
+    AddressGenerator,
 };
 
 fn main() {
@@ -61,7 +62,6 @@ fn main() {
         if let Some(postfix) = &*postfix_option {
             end = postfix.to_uppercase();
         }
-        
         if let Some(prefix) = &*prefix_option {
             start = prefix.to_uppercase();
         }
