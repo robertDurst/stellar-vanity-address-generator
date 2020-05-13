@@ -97,7 +97,7 @@ pub fn optimized_prefix_deserialize_public_key(keypair: &Keypair) -> String {
     &bytes_public.extend_from_slice(&keypair.public.to_bytes());
     // Create a buffer to combine byte version : ED25519 raw key : checksum
     let mut bytes_buffer_public = BytesMut::with_capacity(1024);
-    bytes_buffer_public.put(&bytes_public);
+    bytes_buffer_public.put_slice(&bytes_public);
     // Base 32 encode the public key
     let public_key = encode(RFC4648 { padding: false }, &bytes_buffer_public);
 
@@ -114,7 +114,7 @@ pub fn deserialize_public_key(keypair: &Keypair) -> String {
     let checksum_public = State::<XMODEM>::calculate(&bytes_public);
     // Create a buffer to combine byte version : ED25519 raw key : checksum
     let mut bytes_buffer_public = BytesMut::with_capacity(1024);
-    bytes_buffer_public.put(&bytes_public);
+    bytes_buffer_public.put_slice(&bytes_public);
     bytes_buffer_public.put_u16_le(checksum_public);
     // Base 32 encode the public key
     let public_key = encode(RFC4648 { padding: false }, &bytes_buffer_public);
@@ -132,7 +132,7 @@ pub fn deserialize_private_key(keypair: &Keypair) -> String {
     let check_sum_private = State::<XMODEM>::calculate(&bytes_private);
     // Create a buffer to combine byte version : ED25519 raw key : checksum
     let mut bytes_buffer_private = BytesMut::with_capacity(1024);
-    bytes_buffer_private.put(&bytes_private);
+    bytes_buffer_private.put_slice(&bytes_private);
     bytes_buffer_private.put_u16_le(check_sum_private);
     // Base 32 encode the private key
     let private_key = encode(RFC4648 { padding: false }, &bytes_buffer_private);
