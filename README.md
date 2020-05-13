@@ -1,6 +1,7 @@
 # Stellar Vanity
 
-![](https://img.shields.io/crates/d/stellar_vanity)
+![](https://img.shields.io/crates/v/stellar_vanity)
+![](https://img.shields.io/librariesio/release/cargo/stellar_vanity)
 
 A simple CLI tool to generate Stellar vanity addresses.
 
