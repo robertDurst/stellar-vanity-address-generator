@@ -7,7 +7,7 @@ use std::time::Instant;
 
 use clap::{App, Arg};
 use stellar_vanity::vanity_key::{
-    deserialize_private_key, deserialize_public_key, AddressGenerator,
+    deserialize_private_key, deserialize_public_key, AddressGenerator, optimized_prefix_deserialize_public_key
 };
 
 fn main() {
@@ -55,21 +55,33 @@ fn main() {
         let postfix_option = Arc::clone(&postfix_option);
         let prefix_option = Arc::clone(&prefix_option);
 
+        let mut start: std::string::String = "".to_string();
+        let mut end: std::string::String = "".to_string();
+
+        if let Some(postfix) = &*postfix_option {
+            end = postfix.to_uppercase();
+        }
+        
+        if let Some(prefix) = &*prefix_option {
+            start = prefix.to_uppercase();
+        }
+
         thread::spawn(move || {
             let mut generator: AddressGenerator = Default::default();
 
             let keypair = generator
                 .find(|key| {
                     let mut found = true;
-                    let pk = deserialize_public_key(key);
-                    let key_str = pk.as_str();
 
-                    if let Some(postfix) = &*postfix_option {
-                        found &= key_str.ends_with(&postfix.to_uppercase());
-                    }
-
-                    if let Some(prefix) = &*prefix_option {
-                        found &= key_str[2..].starts_with(&prefix.to_uppercase());
+                    if end == "" {
+                        let pk = optimized_prefix_deserialize_public_key(key);
+                        let key_str = pk.as_str();
+                        found &= key_str[2..].starts_with(&start);
+                    } else {
+                        let pk = deserialize_public_key(key);
+                        let key_str = pk.as_str();
+                        found &= key_str[2..].starts_with(&start);
+                        found &= key_str.ends_with(&end);
                     }
 
                     found
