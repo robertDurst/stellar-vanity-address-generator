@@ -18,6 +18,8 @@ crc16 = "0.4.0"
 bytes = "0.5.4"
 byteorder = "1.2.1"
 clap = "2.26.0"
+regex = "1"
+fstrings = "0.2.3"
 
 [dev-dependencies]
 criterion = "0.3"

@@ -63,3 +63,11 @@ As an example, the following looks for an address ending in pizza with 8 threads
 ```
 cargo run -- -c=8 --postfix=pizza
 ```
+
+The `--prefix` and `--postfix` options will search using RegEx expressions.
+
+The following looks for an address ending in joe with a number before it, using 8 threads:
+```
+cargo run -- -c=8 --postfix='[0-9]joe
+```
+

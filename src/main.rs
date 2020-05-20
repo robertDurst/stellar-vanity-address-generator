@@ -1,5 +1,8 @@
 extern crate clap;
 extern crate stellar_vanity;
+extern crate regex;
+#[macro_use]
+extern crate fstrings;
 
 use std::sync::{mpsc, Arc};
 use std::thread;
@@ -10,6 +13,8 @@ use stellar_vanity::vanity_key::{
     deserialize_private_key, deserialize_public_key, optimized_prefix_deserialize_public_key,
     AddressGenerator,
 };
+
+use regex::Regex;
 
 fn main() {
     let matches = App::new("Stellar Vanity Address Generator")
@@ -58,12 +63,16 @@ fn main() {
 
         let mut start: std::string::String = "".to_string();
         let mut end: std::string::String = "".to_string();
+        let mut startre = Regex::new(r".").unwrap();
+        let mut endre = Regex::new(r".").unwrap();
 
         if let Some(postfix) = &*postfix_option {
             end = postfix.to_uppercase();
+            endre = Regex::new(&f!("{end}$")).unwrap();
         }
         if let Some(prefix) = &*prefix_option {
             start = prefix.to_uppercase();
+            startre = Regex::new(&f!("^{start}")).unwrap();
         }
 
         thread::spawn(move || {
@@ -76,12 +85,15 @@ fn main() {
                     if end == "" {
                         let pk = optimized_prefix_deserialize_public_key(key);
                         let key_str = pk.as_str();
-                        found &= key_str[2..].starts_with(&start);
+                        // found &= key_str[2..].starts_with(&start);
+                        found &= &startre.is_match(&key_str[2..]);
                     } else {
                         let pk = deserialize_public_key(key);
                         let key_str = pk.as_str();
-                        found &= key_str[2..].starts_with(&start);
-                        found &= key_str.ends_with(&end);
+                        // found &= key_str[2..].starts_with(&start);
+                        // found &= &key_str.ends_with(&end);
+                        found &= &startre.is_match(&key_str[2..]);
+                        found &= &endre.is_match(&key_str);
                     }
 
                     found
