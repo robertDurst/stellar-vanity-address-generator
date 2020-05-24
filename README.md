@@ -13,14 +13,25 @@ Generating such an address requires work.
 
 Benchmarking is performed by using [criterion.rs](https://github.com/bheisler/criterion.rs) via `cargo bench`, which executes the `benches/benchmark.rs` file.
 
-To see how things actually perform, [not just in theory based on a random chart from the internet](https://github.com/robertDurst/stellar-vanity-address-generator/issues/13), I benchmarked on a CPU-intensive Ubuntu 18.04 box with 32 vCPUs, 64GB RAM, and 400GB Disk. Below are my results with a `32` thread and `10` sample configuration executed against rust `1.43.0` on May 12, 2020. Using only `10` samples is a weakness in this benchmarking example - will need to increase for a more accurate testing in the future.
+To see how things actually perform, [not just in theory based on a random chart from the internet](https://github.com/robertDurst/stellar-vanity-address-generator/issues/13), @grempe (thanks a lot!!!) benchmarked on:
+
+```
+AWS c5.metal (358 ECUs, 96 vCPUs, 3.6 GHz, 2nd Gen Intel Xeon Platinum 8275CL, 192 GiB memory, EBS only)
+
+25 Gigabit network
+
+Ubuntu Server 18.04 LTS (HVM), SSD Volume Type - ami-085925f297f89fce1
+```
+
+using all 96 vCPUs. Below are his results with a `96` thread and `10` sample configuration executed against rust `1.43.0` on May 13, 2020. Using only `10` samples is a weakness in this benchmarking example - will need to increase for a more accurate testing in the future.
 
 | prefix size | measured time |
 |-------------|---------------|
-| 1           | ~3.6 ms       |
-| 2           | ~47.4 ms      |
-| 3           | ~1.0 s        |
-| 4           | ~26.5 s       |
+| 1           | ~6.7 ms       |
+| 2           | ~38.2 ms      |
+| 3           | ~889.9 ms     |
+| 4           | ~9.7 s        |
+| 5           | ~448.2 s      |
 
 ## How can I Benchmark?
 
