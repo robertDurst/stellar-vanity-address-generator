@@ -7,7 +7,7 @@ use std::sync::{mpsc, Arc};
 use std::thread;
 use stellar_vanity::vanity_key::{deserialize_public_key, AddressGenerator};
 
-const NUM_SAMPLES: usize = 25;
+const NUM_SAMPLES: usize = 10;
 
 fn test_generator_postfix_multicore(pattern: &str, threads_count: i64) {
     let (tx, rx) = mpsc::channel();
@@ -42,7 +42,7 @@ fn test_generator_postfix_multicore(pattern: &str, threads_count: i64) {
 
 fn criterion_benchmark(c: &mut Criterion) {
     // use as many threads as possible
-    let num_threads: i64 = num_cpus::get() as i64;
+    let num_threads: i64 = (num_cpus::get() as i64) - 1;
 
     c.bench(
         "prefix",
