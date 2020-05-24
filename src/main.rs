@@ -1,6 +1,6 @@
 extern crate clap;
-extern crate stellar_vanity;
 extern crate regex;
+extern crate stellar_vanity;
 #[macro_use]
 extern crate fstrings;
 
@@ -19,7 +19,7 @@ use regex::Regex;
 fn main() {
     let matches = App::new("Stellar Vanity Address Generator")
         .version("0.4.0")
-        .author("Rob Durst")
+        .author("Rob Durst et al.")
         .about("A simple CLI for generating Stellar Vanity Addresses.")
         .arg(
             Arg::with_name("POSTFIX")
@@ -61,17 +61,15 @@ fn main() {
         let postfix_option = Arc::clone(&postfix_option);
         let prefix_option = Arc::clone(&prefix_option);
 
-        let mut start: std::string::String = "".to_string();
-        let mut end: std::string::String = "".to_string();
         let mut startre = Regex::new(r".").unwrap();
         let mut endre = Regex::new(r".").unwrap();
 
         if let Some(postfix) = &*postfix_option {
-            end = postfix.to_uppercase();
+            let end = postfix.to_uppercase();
             endre = Regex::new(&f!("{end}$")).unwrap();
         }
         if let Some(prefix) = &*prefix_option {
-            start = prefix.to_uppercase();
+            let start = prefix.to_uppercase();
             startre = Regex::new(&f!("^{start}")).unwrap();
         }
 
@@ -82,16 +80,13 @@ fn main() {
                 .find(|key| {
                     let mut found = true;
 
-                    if end == "" {
+                    if let None = &*postfix_option {
                         let pk = optimized_prefix_deserialize_public_key(key);
                         let key_str = pk.as_str();
-                        // found &= key_str[2..].starts_with(&start);
                         found &= &startre.is_match(&key_str[2..]);
                     } else {
                         let pk = deserialize_public_key(key);
                         let key_str = pk.as_str();
-                        // found &= key_str[2..].starts_with(&start);
-                        // found &= &key_str.ends_with(&end);
                         found &= &startre.is_match(&key_str[2..]);
                         found &= &endre.is_match(&key_str);
                     }
