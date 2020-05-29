@@ -44,6 +44,10 @@ fn criterion_benchmark(c: &mut Criterion) {
     // use as many threads as possible
     let num_threads: i64 = (num_cpus::get() as i64) - 1;
 
+    // hard stop in case fewer than a realistic number of threads availible
+    if num_threads < 32 {
+        print!("Sorry, you unfortunately do not have enough threads to realistically benchmark. 32 recommended.")
+    }
     c.bench(
         "prefix",
         Benchmark::new("one", move |b| {
@@ -60,9 +64,6 @@ fn criterion_benchmark(c: &mut Criterion) {
         })
         .with_function("five", move |b| {
             b.iter(|| test_generator_postfix_multicore(black_box("abcde"), black_box(num_threads)))
-        })
-        .with_function("six", move |b| {
-            b.iter(|| test_generator_postfix_multicore(black_box("abcdef"), black_box(num_threads)))
         })
         .sample_size(NUM_SAMPLES),
     );

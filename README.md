@@ -35,7 +35,7 @@ using all 96 vCPUs. Below are his results with a `96` thread and `10` sample con
 
 ## How can I Benchmark?
 
-Ah, thanks so much! I have limited computing power.
+Ah, thanks so much! I have limited computing power (if you do too... do not attempt, will likely be long and costly)
 
 1. `git clone https://github.com/robertDurst/stellar-vanity-address-generator.git`
 2. `cd stellar-vanity-address-generator`
