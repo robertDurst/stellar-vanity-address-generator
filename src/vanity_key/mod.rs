@@ -52,14 +52,14 @@ impl CryptoRng for NotRNG {}
 
 pub struct AddressGenerator<T = NotRNG>
 where
-    T: Rng + CryptoRng,
+T: Rng + CryptoRng,
 {
     rng: T,
 }
 
 impl<T> AddressGenerator<T>
 where
-    T: Rng + CryptoRng,
+T: Rng + CryptoRng,
 {
     pub fn new(rng: T) -> AddressGenerator<T> {
         AddressGenerator { rng }
@@ -77,7 +77,7 @@ impl Default for AddressGenerator<NotRNG> {
 
 impl<T> Iterator for AddressGenerator<T>
 where
-    T: Rng + CryptoRng,
+T: Rng + CryptoRng,
 {
     type Item = Keypair;
 
@@ -94,7 +94,7 @@ pub fn optimized_prefix_deserialize_public_key(keypair: &Keypair) -> String {
     const VERSION_BYTE_ACCOUNT_ID: u8 = 6 << 3;
     let mut bytes_public = vec![VERSION_BYTE_ACCOUNT_ID];
     // Combine the byte version and the ED25519 raw public key bytes array
-    &bytes_public.extend_from_slice(&keypair.public.to_bytes());
+    let _ = &bytes_public.extend_from_slice(&keypair.public.to_bytes());
     // Create a buffer to combine byte version : ED25519 raw key : checksum
     let mut bytes_buffer_public = BytesMut::with_capacity(1024);
     bytes_buffer_public.put_slice(&bytes_public);
@@ -109,7 +109,7 @@ pub fn deserialize_public_key(keypair: &Keypair) -> String {
     const VERSION_BYTE_ACCOUNT_ID: u8 = 6 << 3;
     let mut bytes_public = vec![VERSION_BYTE_ACCOUNT_ID];
     // Combine the byte version and the ED25519 raw public key bytes array
-    &bytes_public.extend_from_slice(&keypair.public.to_bytes());
+    let _ = &bytes_public.extend_from_slice(&keypair.public.to_bytes());
     // Calculate checksum
     let checksum_public = State::<XMODEM>::calculate(&bytes_public);
     // Create a buffer to combine byte version : ED25519 raw key : checksum
@@ -127,7 +127,7 @@ pub fn deserialize_private_key(keypair: &Keypair) -> String {
     const VERSION_BYTE_SEED: u8 = 18 << 3;
     let mut bytes_private = vec![VERSION_BYTE_SEED];
     // Combine the byte version and the ED25519 raw private key bytes array
-    &bytes_private.extend_from_slice(&keypair.secret.to_bytes());
+    let _ = &bytes_private.extend_from_slice(&keypair.secret.to_bytes());
     // Calculate checksum
     let check_sum_private = State::<XMODEM>::calculate(&bytes_private);
     // Create a buffer to combine byte version : ED25519 raw key : checksum
