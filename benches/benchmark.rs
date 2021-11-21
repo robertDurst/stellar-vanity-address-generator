@@ -2,12 +2,12 @@ extern crate criterion;
 extern crate num_cpus;
 extern crate stellar_vanity;
 
-use criterion::{black_box, criterion_group, criterion_main, Benchmark, Criterion};
+use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use std::sync::{mpsc, Arc};
 use std::thread;
 use stellar_vanity::vanity_key::{deserialize_public_key, AddressGenerator};
 
-const NUM_SAMPLES: usize = 10;
+// const NUM_SAMPLES: usize = 10;
 
 fn test_generator_postfix_multicore(pattern: &str, threads_count: i64) {
     let (tx, rx) = mpsc::channel();
@@ -33,40 +33,33 @@ fn test_generator_postfix_multicore(pattern: &str, threads_count: i64) {
 
             // ignore output - will often panic due to send on closed channel
             // race condition
-            thread_tx.send(keypair);
+            let _ = thread_tx.send(keypair);
         });
     }
 
-    rx.recv();
+    let _ = rx.recv();
 }
 
 fn criterion_benchmark(c: &mut Criterion) {
+    let mut group = c.benchmark_group("postfix");
     // use as many threads as possible
     let num_threads: i64 = (num_cpus::get() as i64) - 1;
-
     // hard stop in case fewer than a realistic number of threads availible
     if num_threads < 32 {
         print!("Sorry, you unfortunately do not have enough threads to realistically benchmark. 32 recommended.")
     }
-    c.bench(
-        "prefix",
-        Benchmark::new("one", move |b| {
-            b.iter(|| test_generator_postfix_multicore(black_box("a"), black_box(num_threads)))
-        })
-        .with_function("two", move |b| {
-            b.iter(|| test_generator_postfix_multicore(black_box("ab"), black_box(num_threads)))
-        })
-        .with_function("three", move |b| {
-            b.iter(|| test_generator_postfix_multicore(black_box("abc"), black_box(num_threads)))
-        })
-        .with_function("four", move |b| {
-            b.iter(|| test_generator_postfix_multicore(black_box("abcd"), black_box(num_threads)))
-        })
-        .with_function("five", move |b| {
-            b.iter(|| test_generator_postfix_multicore(black_box("abcde"), black_box(num_threads)))
-        })
-        .sample_size(NUM_SAMPLES),
-    );
+
+    group
+        .bench_function("one", |b| b.iter(|| test_generator_postfix_multicore(black_box("a"), black_box(num_threads))))
+        .sample_size(100);
+
+    group
+        .bench_function("two", |b| b.iter(|| test_generator_postfix_multicore(black_box("ab"), black_box(num_threads))))
+        .sample_size(25);
+    
+    group
+        .bench_function("three", |b| b.iter(|| test_generator_postfix_multicore(black_box("abc"), black_box(num_threads))))
+        .sample_size(10);
 }
 
 criterion_group!(benches, criterion_benchmark);
