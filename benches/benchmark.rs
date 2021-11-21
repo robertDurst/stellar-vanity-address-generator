@@ -1,11 +1,13 @@
 extern crate criterion;
 extern crate num_cpus;
 extern crate stellar_vanity;
+extern crate pprof;
 
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use std::sync::{mpsc, Arc};
 use std::thread;
 use stellar_vanity::vanity_key::{deserialize_public_key, AddressGenerator};
+use pprof::criterion::{Output, PProfProfiler};
 
 // const NUM_SAMPLES: usize = 10;
 
@@ -62,5 +64,9 @@ fn criterion_benchmark(c: &mut Criterion) {
         .sample_size(10);
 }
 
-criterion_group!(benches, criterion_benchmark);
+criterion_group! {
+    name = benches;
+    config = Criterion::default().with_profiler(PProfProfiler::new(100, Output::Flamegraph(None)));
+    targets = criterion_benchmark
+}
 criterion_main!(benches);

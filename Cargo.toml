@@ -23,8 +23,14 @@ fstrings = "0.2"
 
 [dev-dependencies]
 criterion = "0.3"
+pprof = { version = "0.4.2", features = ["flamegraph", "criterion"] }
 num_cpus = "1.0"
 
 [[bench]]
 name = "benchmark"
 harness = false
+
+[profile.release]
+# This is useful when profiling, because lets the tools include your
+# function names in the profiling reports.
+debug = true
