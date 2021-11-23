@@ -1,7 +1,7 @@
 [package]
 name = "stellar_vanity"
-version = "0.8.0"
-authors = ["Rob Durst <rsdurst@colby.edu>"]
+version = "0.9.0"
+authors = ["Rob Durst <me@robdurst.com>"]
 description = "A simple CLI for generating Stellar vanity addresses"
 readme = "README.md"
 keywords = ["stellar", "vanity", "address"]
@@ -31,6 +31,4 @@ name = "benchmark"
 harness = false
 
 [profile.release]
-# This is useful when profiling, because lets the tools include your
-# function names in the profiling reports.
 debug = true
